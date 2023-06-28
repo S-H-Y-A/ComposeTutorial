@@ -1,9 +1,11 @@
 package com.jozu.jetpack.compose.tutorial
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,24 +50,34 @@ fun Greeting(message: Message) {
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
+                .border(width = 1.5.dp, color = MaterialTheme.colorScheme.secondary, shape = CircleShape)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
                 text = message.author,
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = message.body,
-            )
+            Surface(shape = MaterialTheme.shapes.medium, shadowElevation = 1.dp) {
+                Text(
+                    text = message.body,
+                    modifier = Modifier.padding(all = 4.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun GreetingPreview() {
     ComposeTutorialTheme {
-        Greeting(Message("Android", "Jetpack Compose"))
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Greeting(Message("Android", "Jetpack Compose"))
+        }
     }
 }

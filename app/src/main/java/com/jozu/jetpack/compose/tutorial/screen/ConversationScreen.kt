@@ -6,10 +6,12 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -34,12 +37,39 @@ import com.jozu.jetpack.compose.tutorial.R
 import com.jozu.jetpack.compose.tutorial.model.Message
 import com.jozu.jetpack.compose.tutorial.model.SampleData
 import com.jozu.jetpack.compose.tutorial.ui.theme.ComposeTutorialTheme
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
-fun ConversationScreen() {
+fun ConversationScreen(title: String, timeInMillis: Long?) {
     Surface(modifier = Modifier.fillMaxSize()) {
-        Conversation(SampleData.conversationSample)
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Text(
+                    getTimeString(timeInMillis),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Conversation(SampleData.conversationSample)
+        }
     }
+}
+
+fun getTimeString(timeInMillis: Long?): String {
+    val cal = Calendar.getInstance()
+    cal.timeInMillis = timeInMillis ?: 0
+    val formatter = SimpleDateFormat("H:mm:ss", Locale.getDefault())
+    return formatter.format(cal.time)
 }
 
 @Composable
@@ -100,8 +130,6 @@ fun Greeting(message: Message) {
 @Composable
 fun GreetingPreview() {
     ComposeTutorialTheme {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            ConversationScreen()
-        }
+        ConversationScreen("title", 0L)
     }
 }

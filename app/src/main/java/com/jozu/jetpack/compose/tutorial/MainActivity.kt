@@ -3,6 +3,11 @@ package com.jozu.jetpack.compose.tutorial
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,7 +34,13 @@ class MainActivity : ComponentActivity() {
             ComposeTutorialTheme {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = Nav.TopScreen.name) {
-                    composable(route = Nav.TopScreen.name) {
+                    composable(
+                        route = Nav.TopScreen.name,
+                        enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth / 2 }, animationSpec = tween()) },
+                        exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth / 2 }, animationSpec = tween()) },
+                        popEnterTransition = { slideInVertically(initialOffsetY = { fullHeight -> fullHeight / 2 }, animationSpec = tween()) },
+                        popExitTransition = { slideOutVertically(targetOffsetY = { fullHeight -> fullHeight / 2 }, animationSpec = tween()) },
+                    ) {
                         val title = URLEncoder.encode("/\\ Conversationタイトル /\\", "UTF-8")
                         val timeInMillis = System.currentTimeMillis()
                         TopScreen(
@@ -44,6 +55,10 @@ class MainActivity : ComponentActivity() {
                             navArgument("title") { type = NavType.StringType },
                             navArgument("time") { type = NavType.LongType },
                         ),
+                        enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth / 2 }, animationSpec = tween()) },
+                        exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth / 2 }, animationSpec = tween()) },
+                        popEnterTransition = { slideInVertically(initialOffsetY = { fullHeight -> fullHeight / 2 }, animationSpec = tween()) },
+                        popExitTransition = { slideOutVertically(targetOffsetY = { fullHeight -> fullHeight / 2 }, animationSpec = tween()) },
                     ) { backStackEntry ->
                         val title = URLDecoder.decode(backStackEntry.arguments?.getString("title") ?: "", "UTF-8")
                         val timeInMillis = backStackEntry.arguments?.getLong("time")

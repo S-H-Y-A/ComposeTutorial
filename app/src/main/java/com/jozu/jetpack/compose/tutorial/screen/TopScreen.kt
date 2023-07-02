@@ -22,7 +22,10 @@ import com.jozu.jetpack.compose.tutorial.ui.theme.ComposeTutorialTheme
  * Copyright (c) 2023 Studio Jozu. All rights reserved.
  */
 @Composable
-fun TopScreen(onNavigateToConversation: () -> Unit) {
+fun TopScreen(
+    onNavigateToConversation: () -> Unit,
+    onNavigateToMapFragment: () -> Unit,
+) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -30,6 +33,7 @@ fun TopScreen(onNavigateToConversation: () -> Unit) {
             verticalArrangement = Arrangement.Center,
         ) {
             IconButton(label = "Greeting", onClick = onNavigateToConversation)
+            IconButton(label = "MapFragment", onClick = onNavigateToMapFragment)
         }
     }
 }
@@ -42,7 +46,10 @@ fun MainPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            TopScreen(onNavigateToConversation = {})
+            TopScreen(
+                onNavigateToConversation = {},
+                onNavigateToMapFragment = {},
+            )
         }
     }
 }

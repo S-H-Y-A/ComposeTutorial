@@ -1,13 +1,19 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
     namespace 'com.jozu.jetpack.compose.tutorial'
     compileSdk 33
 
+    def properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
     defaultConfig {
+
         applicationId "com.jozu.jetpack.compose.tutorial"
         minSdk 26
         targetSdk 33
@@ -17,6 +23,21 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file(project.rootProject.file(properties.getProperty("keystore.file")))
+            storePassword properties.getProperty("keystore.storePassword")
+            keyPassword properties.getProperty("keystore.keyPassword")
+            keyAlias properties.getProperty("keystore.alias")
+        }
+        release {
+            storeFile file(project.rootProject.file(properties.getProperty("keystore.file")))
+            storePassword properties.getProperty("keystore.storePassword")
+            keyPassword properties.getProperty("keystore.keyPassword")
+            keyAlias properties.getProperty("keystore.alias")
         }
     }
 
@@ -58,6 +79,9 @@ dependencies {
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.navigation:navigation-compose:2.7.0-beta01'
+    implementation platform('com.google.firebase:firebase-bom:32.1.1')
+    implementation 'com.google.maps.android:maps-compose:2.11.4'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

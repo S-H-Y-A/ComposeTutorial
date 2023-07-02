@@ -14,3 +14,5 @@
 .cxx
 local.properties
 /screenshot/
+/app/google-services.json
+/keystore/

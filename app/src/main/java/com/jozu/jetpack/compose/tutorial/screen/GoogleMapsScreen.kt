@@ -24,6 +24,7 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 
 /**
@@ -81,15 +82,25 @@ fun Map(
     markerItems: List<LatLng>,
     onMapLoaded: () -> Unit = {},
 ) {
+    var polylineItems by remember { mutableStateOf<List<LatLng>>(listOf()) }
+
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
         onMapLoaded = onMapLoaded,
+        onMapClick = { latLng ->
+            polylineItems = polylineItems + latLng
+        },
     ) {
         markerItems.forEach { markerItem ->
             Marker(
                 state = MarkerState(position = markerItem),
                 title = "${markerItem.latitude},${markerItem.longitude}"
+            )
+        }
+        if (polylineItems.count() > 1) {
+            Polyline(
+                points = polylineItems,
             )
         }
     }

@@ -1,5 +1,7 @@
 package com.jozu.jetpack.compose.tutorial.screen
 
+import android.graphics.Point
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -45,6 +48,7 @@ fun GoogleMapsScreen() {
         position = CameraPosition.fromLatLngZoom(initPos, 10f)
     }
     val markerItems = remember { mutableStateListOf<LatLng>() }
+    var polylineItems by remember { mutableStateOf<List<LatLng>>(listOf()) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -55,14 +59,37 @@ fun GoogleMapsScreen() {
                     .fillMaxSize()
             ) {
                 Column {
-                    Map(
-                        modifier = Modifier.weight(1f),
-                        cameraPositionState = cameraPositionState,
-                        markerItems = markerItems,
-                        onMapLoaded = {
-                            isMapLoaded = true
-                        }
-                    )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxSize()
+                    ) {
+                        Map(
+                            modifier = Modifier.matchParentSize(),
+                            cameraPositionState = cameraPositionState,
+                            markerItems = markerItems,
+                            polylineItems = polylineItems,
+                            onMapLoaded = {
+                                isMapLoaded = true
+                            }
+                        )
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .pointerInput(Unit) {
+                                    detectTapGestures(
+                                        onPress = { offset ->
+                                            if (!cameraPositionState.isMoving) {
+                                                val pressedLatLng = cameraPositionState.projection?.fromScreenLocation(Point(offset.x.toInt(), offset.y.toInt()))
+                                                if (pressedLatLng != null) {
+                                                    polylineItems = polylineItems + pressedLatLng
+                                                }
+                                            }
+                                        },
+                                    )
+                                },
+                        )
+                    }
                     Buttons(
                         modifier = Modifier.fillMaxWidth(),
                         isMapLoaded = isMapLoaded,
@@ -80,17 +107,13 @@ fun Map(
     modifier: Modifier,
     cameraPositionState: CameraPositionState,
     markerItems: List<LatLng>,
+    polylineItems: List<LatLng>,
     onMapLoaded: () -> Unit = {},
 ) {
-    var polylineItems by remember { mutableStateOf<List<LatLng>>(listOf()) }
-
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
         onMapLoaded = onMapLoaded,
-        onMapClick = { latLng ->
-            polylineItems = polylineItems + latLng
-        },
     ) {
         markerItems.forEach { markerItem ->
             Marker(

@@ -25,6 +25,7 @@ import com.jozu.jetpack.compose.tutorial.ui.theme.ComposeTutorialTheme
 fun TopScreen(
     onNavigateToConversation: () -> Unit,
     onNavigateToMapFragment: () -> Unit,
+    onNavigateToButtonSample: () -> Unit,
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -34,6 +35,7 @@ fun TopScreen(
         ) {
             IconButton(label = "Greeting", onClick = onNavigateToConversation)
             IconButton(label = "MapFragment", onClick = onNavigateToMapFragment)
+            IconButton(label = "Buttons", onClick = onNavigateToButtonSample)
         }
     }
 }
@@ -49,6 +51,7 @@ fun MainPreview() {
             TopScreen(
                 onNavigateToConversation = {},
                 onNavigateToMapFragment = {},
+                onNavigateToButtonSample = {},
             )
         }
     }

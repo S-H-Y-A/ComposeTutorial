@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.jozu.jetpack.compose.tutorial.nav.Nav
 import com.jozu.jetpack.compose.tutorial.nav.NavAnim
+import com.jozu.jetpack.compose.tutorial.screen.ButtonSampleScreen
 import com.jozu.jetpack.compose.tutorial.screen.ConversationScreen
 import com.jozu.jetpack.compose.tutorial.screen.GoogleMapsScreen
 import com.jozu.jetpack.compose.tutorial.screen.TopScreen
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
                     topScreen(navController = navController)
                     conversationScreen(navController = navController)
                     googleMapsScreen(navController = navController)
+                    buttonSampleScreen(navController = navController)
                 }
             }
         }
@@ -57,7 +59,10 @@ class MainActivity : ComponentActivity() {
                 },
                 onNavigateToMapFragment = {
                     navController.navigate(Nav.GoogleMapsScreen.name)
-                }
+                },
+                onNavigateToButtonSample = {
+                    navController.navigate(Nav.ButtonSampleScreen.name)
+                },
             )
         }
     }
@@ -85,6 +90,14 @@ class MainActivity : ComponentActivity() {
             route = Nav.GoogleMapsScreen.name,
         ) {
             GoogleMapsScreen()
+        }
+    }
+
+    private fun NavGraphBuilder.buttonSampleScreen(navController: NavHostController) {
+        composable(
+            route = Nav.ButtonSampleScreen.name,
+        ) {
+            ButtonSampleScreen()
         }
     }
 }

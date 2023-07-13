@@ -6,6 +6,10 @@ plugins {
 }
 
 android {
+    buildFeatures {
+        buildConfig = true
+    }
+
     namespace 'com.jozu.jetpack.compose.tutorial'
     compileSdk 33
 

@@ -4,4 +4,5 @@ enum class Nav {
     TopScreen,
     ConversationScreen,
     GoogleMapsScreen,
+    ButtonSampleScreen,
 }

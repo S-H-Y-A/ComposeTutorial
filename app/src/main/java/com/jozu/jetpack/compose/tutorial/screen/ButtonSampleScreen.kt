@@ -3,34 +3,47 @@ package com.jozu.jetpack.compose.tutorial.screen
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * ボタンのサンプル集
@@ -38,14 +51,21 @@ import androidx.compose.ui.unit.dp
  * Created by jozuko on 2023/07/13.
  * Copyright (c) 2023 Studio Jozu. All rights reserved.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ButtonSampleScreen() {
     var buttonEnabledState by remember { mutableStateOf(ToggleableState(true)) }
     val buttonEnable = buttonEnabledState == ToggleableState.On
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
         Column(
             Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,6 +89,7 @@ fun ButtonSampleScreen() {
                     },
                 )
             }
+            ImageButton(snackbarHostState, coroutineScope)
             ModifierDeco(buttonEnable)
             BackgroundColor(buttonEnable)
             CustomColor(buttonEnable)
@@ -269,4 +290,25 @@ private fun WordWrapButton(buttonEnable: Boolean) {
     ) {
         Text("WordWrap\nButton")
     }
+}
+
+@Composable
+private fun ImageButton(snackbarHostState: SnackbarHostState, coroutineScope: CoroutineScope) {
+    AsyncImage(
+        modifier = Modifier
+            .size(width = 300.dp, height = 100.dp)
+            .clip(RoundedCornerShape(percent = 10))
+            .clickable(
+                indication = rememberRipple(color = Color.White),
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar("名前はアーロンです")
+                    }
+                }
+            ),
+        model = "https://raw.githubusercontent.com/jozuko/ComposeTutorial/main/image/arron.png",
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+    )
 }

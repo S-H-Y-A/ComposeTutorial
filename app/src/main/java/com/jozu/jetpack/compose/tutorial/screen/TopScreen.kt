@@ -26,6 +26,7 @@ fun TopScreen(
     onNavigateToConversation: () -> Unit,
     onNavigateToMapFragment: () -> Unit,
     onNavigateToButtonSample: () -> Unit,
+    onNavigateToSpannableText: () -> Unit,
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -36,6 +37,7 @@ fun TopScreen(
             IconButton(label = "Greeting", onClick = onNavigateToConversation)
             IconButton(label = "MapFragment", onClick = onNavigateToMapFragment)
             IconButton(label = "Buttons", onClick = onNavigateToButtonSample)
+            IconButton(label = "SpannableText", onClick = onNavigateToSpannableText)
         }
     }
 }
@@ -52,6 +54,7 @@ fun MainPreview() {
                 onNavigateToConversation = {},
                 onNavigateToMapFragment = {},
                 onNavigateToButtonSample = {},
+                onNavigateToSpannableText = {},
             )
         }
     }

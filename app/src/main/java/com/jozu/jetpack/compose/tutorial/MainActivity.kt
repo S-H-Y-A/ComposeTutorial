@@ -15,7 +15,7 @@ import com.jozu.jetpack.compose.tutorial.nav.NavAnim
 import com.jozu.jetpack.compose.tutorial.screen.ButtonSampleScreen
 import com.jozu.jetpack.compose.tutorial.screen.ConversationScreen
 import com.jozu.jetpack.compose.tutorial.screen.GoogleMapsScreen
-import com.jozu.jetpack.compose.tutorial.screen.SpannableTextScreen
+import com.jozu.jetpack.compose.tutorial.screen.TextSampleScreen
 import com.jozu.jetpack.compose.tutorial.screen.TopScreen
 import com.jozu.jetpack.compose.tutorial.ui.theme.ComposeTutorialTheme
 import java.net.URLDecoder
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     conversationScreen(navController = navController)
                     googleMapsScreen(navController = navController)
                     buttonSampleScreen(navController = navController)
-                    spannableTextScreen(navController = navController)
+                    textSampleScreen(navController = navController)
                 }
             }
         }
@@ -65,8 +65,8 @@ class MainActivity : ComponentActivity() {
                 onNavigateToButtonSample = {
                     navController.navigate(Nav.ButtonSampleScreen.name)
                 },
-                onNavigateToSpannableText = {
-                    navController.navigate(Nav.SpannableTextScreen.name)
+                onNavigateToTextSampleScreen = {
+                    navController.navigate(Nav.TextSampleScreen.name)
                 }
             )
         }
@@ -106,11 +106,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun NavGraphBuilder.spannableTextScreen(navController: NavHostController) {
+    private fun NavGraphBuilder.textSampleScreen(navController: NavHostController) {
         composable(
-            route = Nav.SpannableTextScreen.name,
+            route = Nav.TextSampleScreen.name,
         ) {
-            SpannableTextScreen()
+            TextSampleScreen()
         }
     }
 }

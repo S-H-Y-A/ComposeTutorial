@@ -6,9 +6,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 
 /**
  *
@@ -21,6 +24,11 @@ fun LinkText(
     text: String,
     linkTextList: List<LinkTextData>,
     modifier: Modifier = Modifier,
+    style: TextStyle = TextStyle.Default,
+    softWrap: Boolean = true,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
     onClick: (url: String) -> Unit,
 ) {
     val linkSpanStyle = SpanStyle(
@@ -43,6 +51,11 @@ fun LinkText(
     ClickableText(
         text = annotatedText,
         modifier = modifier,
+        style = style,
+        softWrap = softWrap,
+        overflow = overflow,
+        maxLines = maxLines,
+        onTextLayout = onTextLayout,
         onClick = { pos ->
             annotatedText.getUrlAnnotations(start = pos, end = pos).firstOrNull()?.let { range ->
                 onClick.invoke(range.item.url)

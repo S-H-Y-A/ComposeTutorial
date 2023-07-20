@@ -169,10 +169,11 @@ private fun getFontSizes(
     val min = min(autoSizeMinTextSize, autoSizeMaxTextSize)
     val max = max(autoSizeMinTextSize, autoSizeMaxTextSize)
 
-    val fontSizes = mutableListOf<Float>()
-    while (fontSizes.isEmpty() || fontSizes.last() < max) {
-        fontSizes.add(min + (autoSizeStepGranularity * fontSizes.count()))
-    }
+    val fontSizes = if (min=<max) {
+       (min..max step autoSizeStepGranularity).toList()
+    } else {
+         listOf(min)
+}
 
     return fontSizes.reversed()
 }

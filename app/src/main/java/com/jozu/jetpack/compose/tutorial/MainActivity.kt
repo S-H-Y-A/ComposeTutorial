@@ -14,6 +14,7 @@ import com.jozu.jetpack.compose.tutorial.nav.Nav
 import com.jozu.jetpack.compose.tutorial.nav.NavAnim
 import com.jozu.jetpack.compose.tutorial.screen.ButtonSampleScreen
 import com.jozu.jetpack.compose.tutorial.screen.ConversationScreen
+import com.jozu.jetpack.compose.tutorial.screen.FlowTestScreen
 import com.jozu.jetpack.compose.tutorial.screen.GoogleMapsScreen
 import com.jozu.jetpack.compose.tutorial.screen.TextSampleScreen
 import com.jozu.jetpack.compose.tutorial.screen.TopScreen
@@ -40,6 +41,7 @@ class MainActivity : ComponentActivity() {
                     googleMapsScreen(navController = navController)
                     buttonSampleScreen(navController = navController)
                     textSampleScreen(navController = navController)
+                    flowTestScreen(navController = navController)
                 }
             }
         }
@@ -67,6 +69,9 @@ class MainActivity : ComponentActivity() {
                 },
                 onNavigateToTextSampleScreen = {
                     navController.navigate(Nav.TextSampleScreen.name)
+                },
+                onNavigateToFlowTestScreen = {
+                    navController.navigate(Nav.FlowTestScreen.name)
                 }
             )
         }
@@ -111,6 +116,14 @@ class MainActivity : ComponentActivity() {
             route = Nav.TextSampleScreen.name,
         ) {
             TextSampleScreen()
+        }
+    }
+
+    private fun NavGraphBuilder.flowTestScreen(navController: NavHostController) {
+        composable(
+            route = Nav.FlowTestScreen.name,
+        ) {
+            FlowTestScreen()
         }
     }
 }

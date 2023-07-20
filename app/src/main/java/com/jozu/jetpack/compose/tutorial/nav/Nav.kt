@@ -6,4 +6,5 @@ enum class Nav {
     GoogleMapsScreen,
     ButtonSampleScreen,
     TextSampleScreen,
+    FlowTestScreen,
 }

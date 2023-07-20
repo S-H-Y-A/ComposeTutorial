@@ -27,6 +27,7 @@ fun TopScreen(
     onNavigateToMapFragment: () -> Unit,
     onNavigateToButtonSample: () -> Unit,
     onNavigateToTextSampleScreen: () -> Unit,
+    onNavigateToFlowTestScreen: () -> Unit,
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -38,6 +39,7 @@ fun TopScreen(
             IconButton(label = "MapFragment", onClick = onNavigateToMapFragment)
             IconButton(label = "Buttons", onClick = onNavigateToButtonSample)
             IconButton(label = "TextSampleScreen", onClick = onNavigateToTextSampleScreen)
+            IconButton(label = "FlowTestScreen", onClick = onNavigateToFlowTestScreen)
         }
     }
 }
@@ -55,6 +57,7 @@ fun MainPreview() {
                 onNavigateToMapFragment = {},
                 onNavigateToButtonSample = {},
                 onNavigateToTextSampleScreen = {},
+                onNavigateToFlowTestScreen = {},
             )
         }
     }

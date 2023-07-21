@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.TextDelegate
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -23,8 +24,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import java.lang.Float.max
-import java.lang.Float.min
 
 /**
  *
@@ -54,6 +53,9 @@ fun AutoSizeText(
     autoSizePresetSizes: List<Float> = emptyList(),
     ignoreFontScale: Boolean = false,
 ) {
+    require(autoSizeMaxTextSize >= autoSizeMinTextSize && autoSizeMaxTextSize > 0f) {
+        "\"autoSizeMaxTextSize\" must be positive and greater than or equal to \"autoSizeMinTextSize\"."
+    }
     BoxWithConstraints(modifier = modifier) {
         val mergedStyle = style.merge(
             TextStyle(
@@ -115,12 +117,13 @@ private fun BoxWithConstraintsScope.getTextStyle(
     val fontFamilyResolver = LocalFontFamilyResolver.current
     val layoutDirection = LocalLayoutDirection.current
 
-    val sizePresets = getFontSizes(
-        autoSizeMaxTextSize,
-        autoSizeMinTextSize,
-        autoSizeStepGranularity,
-        autoSizePresetSizes,
-    )
+    val sizePresets = autoSizePresetSizes.ifEmpty {
+        getFontSizes(
+            autoSizeMaxTextSize,
+            autoSizeMinTextSize,
+            autoSizeStepGranularity,
+        )
+    }.reversed()
 
     var combinedTextStyle = style
     for (fontSize in sizePresets) {
@@ -156,24 +159,25 @@ private fun BoxWithConstraintsScope.getTextStyle(
     return combinedTextStyle
 }
 
+@Composable
 private fun getFontSizes(
     autoSizeMaxTextSize: Float,
     autoSizeMinTextSize: Float,
     autoSizeStepGranularity: Float,
-    autoSizePresetSizes: List<Float>,
 ): List<Float> {
-    if (autoSizePresetSizes.isNotEmpty()) {
-        return autoSizePresetSizes.sortedDescending()
+    require(autoSizeMaxTextSize >= autoSizeMinTextSize && autoSizeMaxTextSize > 0f) {
+        "\"autoSizeMaxTextSize\" must be positive and greater than or equal to \"autoSizeMinTextSize\"."
     }
 
-    val min = min(autoSizeMinTextSize, autoSizeMaxTextSize)
-    val max = max(autoSizeMinTextSize, autoSizeMaxTextSize)
-
-    val fontSizes = if (min=<max) {
-       (min..max step autoSizeStepGranularity).toList()
-    } else {
-         listOf(min)
-}
-
-    return fontSizes.reversed()
+    return remember(autoSizeMaxTextSize, autoSizeMinTextSize, autoSizeStepGranularity) {
+        sequence {
+            // ※ autoSizeMaxTextSize == autoSizeMinTextSizeの際は、
+            // autoSizeMaxTextSize(=autoSizeMinTextSize) のみのListを生成
+            yieldAll(
+                generateSequence(autoSizeMinTextSize) { it + autoSizeStepGranularity }
+                    .takeWhile { it < autoSizeMaxTextSize }
+            )
+            yield(autoSizeMaxTextSize)
+        }.toList()
+    }
 }
